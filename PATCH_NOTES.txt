@@ -1,0 +1,36 @@
+v1.8.6: QQRH Hilbert development
+- Preserve all 29 earlier entries and their equations.
+- Add projective metric, overlap-kernel Newton, and kernel feedback entries.
+- Add right-click Hilbert inspector with metric, angle and coefficient weights.
+- Add radius/close-up/Julia presets with matching button labels.
+- Preserve native engine, zoom, worker scheduling, view and BMP export.
+- Expand portable mathematical checks and native on-device checks.
+See VALIDATION_1_8_6.txt for the precise verified/unverified boundary.
+FRAKTALFAKTUR_RH_LAB_GPU_v1_8_0 - PATCH NOTES
+BASE: FRAKTALFAKTUR_RH_LAB_GPU_v1_7_2 (same native window, keys, CPU scheduler,
+      Direct3D 11 GPU renderer, precision repair and 13 existing RH candidates).
+
+1. APPENDED FIVE INDEPENDENT MATHEMATICAL DRIVERS (indices 13..17;
+   user-facing generations 14..18): spectral echo determinant, Laguerre
+   differential determinant, dyadic holonomy, antipodal Wronskian,
+   projective Schwarzian numerator. Preserved 1-13 and all 12 carriers.
+2. CPU: rh_candidates.hpp now includes boundedThetaJets, shared M^N
+   normalization, and five Newton F/F' models. No denominator epsilon.
+3. GPU: rh_lab_shader.hpp includes HLSL boundedThetaJets, analytic F/F',
+   conservative cancellation guards, CPU-repair sentinel on uncertainty.
+   rh_gpu_data.hpp stores R in unused float texel [94,15] without changing
+   the preexisting 160-byte constant-buffer ABI or curvature metadata.
+   Existing cached coefficient/radius keys already cover shift updates.
+4. CATALOGUE: 18 rows; initial highlighted driver is #14. Direct renderer
+   selectors use the five registry identifiers. Existing UI and save/load.
+5. SELF-TEST: new_structure_tests.hpp has independent exact-polynomial
+   checks; new_structure_gpu_tests.hpp verifies hardware parity, cache,
+   charts, Cayley/Tricorn and raw GPU participation on the target PC.
+6. Root run.cmd/build.cmd versioned 1.8.0; engine_probe.hpp label updated.
+7. README.txt, NEW_STRUCTURES.txt, VALIDATION.txt refreshed; previous
+   RH_BRANCH_MAPS.txt, FINDINGS.txt, PERFORMANCE.txt retained as 1.7.2
+   historical context. MANIFEST.sha256 recreated for packaged sources.
+
+Actual Windows/Mingw compilation, Direct3D shader compilation and GPU/CPU
+image parity still await the user's computer. Linux-only C++ algebra tests
+and portable C++ image generation were run during preparation.

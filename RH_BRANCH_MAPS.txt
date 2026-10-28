@@ -1,0 +1,53 @@
+INHERITED BASE MAPS (1.7.2), PRESERVED IN 1.8.0
+RH BRANCH MAPS - 1.7.2
+
+COMMON FINITE MODEL
+T(y)=sum_{n=0}^N a_n*y^n = Theta_N(200y)/Theta(0), using the retained rounded
+coefficient table. UI degrees are 8, 16 and 32. The driver's coordinate is
+y=b*z+h, with b>0. E_R(x)=T(R*w)*T(R/w), 2*x=w+1/w, evaluated as the exact
+polynomial lift in x with Chebyshev coefficients; no square-root sampling.
+
+Each target F gives feedback N(z)=F(y)/(b*F_y(y)). The original carrier is
+z_next=z^2+c-lambda*N(z). The existing Cayley, Tricorn and other Lab carriers
+apply this same driver response in their respective update formulas.
+
+11. LOGARITHMIC ANGULAR FOLD
+D=E*E_xx-E_x^2; D_x=E*E_xxx-E_x*E_xx.
+F=D/E^2-level = partial_x(E_x/E)-level.
+F_x=(D_x*E-2*D*E_x)/E^3.
+F/F_x=(D-level*E^2)*E/(D_x*E-2*D*E_x).
+Default level=0. This targets folds of the logarithmic angular slope, rather
+than the existing raw angular fold E_xx or the existing slope E_x/E levels.
+
+12. DYADIC DILATION GAP
+C(y)=y*T'(y)/T(y).
+F=C(2*y)-C(y)-level.
+F_y=2*C'(2*y)-C'(y).
+F/F_y=[C(2*y)-C(y)-level]/[2*C'(2*y)-C'(y)].
+Default level=0. This is the finite full-T analogue of comparing dilation
+scalars at two radii in the RH branch. It uses the full finite T model;
+zero-removal factors and an infinite residual are outside this implementation.
+Normal/reversed polynomial evaluation is selected independently at y and2*y.
+
+13. EQUIPOTENTIAL FLOW TILT
+U(R,x)=E_R'(x).
+F=U_R/U_x-level.
+F_x=(U_Rx*U_x-U_R*U_xx)/U_x^2.
+F/F_x=(U_R-level*U_x)*U_x/(U_Rx*U_x-U_R*U_xx).
+Default level=1. On a regular real contour U(R,x)=constant,
+dx/dR=-U_R/U_x. The target therefore selects contour tilt; it does not assert
+a direction for every flow or prove critical-line exclusion.
+
+PRECISION
+The CPU uses long-double derivative data and evaluates the stated quotient.
+The GPU uses the existing float32 guards and delegates uncertain pixels to
+CPU repair. Pole/common-zero cases follow explicit evaluator handling and
+remain numerical diagnostics where the continuation is unresolved.
+No epsilon denominator, clipping or hidden level rescaling changes the map.
+
+VALIDATION
+The original ten stored correction references remain unchanged. New native
+checks independently build the angular polynomial from the Laurent product,
+differentiate it in ordinary powers, and compare the new Newton quotients.
+Short GPU/CPU comparisons cover the added candidates, degrees, carriers,
+charts and cache behavior. All validation runs on the user's Windows PC.

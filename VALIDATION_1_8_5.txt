@@ -1,0 +1,42 @@
+FRAKTALFAKTUR v1.8.5 - QQRH Hilbert geometry
+Date: 2026-10-26
+
+SOURCE
+The actual v1.8.4 ZIP was retrieved and extracted before editing.
+Changes extend its family-25 catalogue and original compute-shader pipeline.
+No replacement renderer was introduced.
+
+COMPLETED HERE (Linux, portable C++17, g++ -O2 -pthread)
+EXTRA_INTEGRATION_TEST=PASS CHECKS=214
+QQRH_HILBERT_TEST=PASS CHECKS=242 FAILURES=0 N=12
+CLASSIC_INTEGRATION=PASS (all 18 original candidate cases)
+Catalogue total: 29; all 11 family-25 view round trips passed.
+Serial and four-worker renders agree for all 11 family-25 drivers.
+The eight pre-existing family-25 image hashes exactly match v1.8.4 values.
+Independent checks cover the polynomial angular-derivative identity,
+correlation and angular derivatives, coherence bounds, shift Gram defect,
+energy telescoping and Newton residual/correction stopping regressions.
+Actual CPU previews generated through amp::renderColor and visually inspected.
+Each new default view produces a nonconstant image.
+Standalone and embedded HLSL source synchronization checked.
+
+PREPARED WINDOWS CHECKS - NOT EXECUTED HERE
+The original run.cmd / build.cmd remain the native compiler entry points.
+They compile the full Windows application and run CPU tests.
+--gpu-self-test also runs the original checks, integrated cs_5_0 compilation,
+36 new short-orbit/coherence comparisons using the production evaluator,
+and 9 actual production-renderer field cases across radii/palettes.
+GPU endpoint relative tolerance 2e-4; field absolute tolerance 2e-5;
+production field RGB-byte tolerance 4. No CPU fallback may satisfy GPU checks.
+
+OUTSTANDING
+Native Windows compilation and execution of this exact v1.8.5 package.
+D3D11 shader compilation/dispatch, on-device checks and interactive performance.
+No Windows, shader, RH, QQRH, Lean or axiom-audit PASS is claimed by this receipt.
+Earlier-version validation files in this package are historical receipts only.
+
+SOURCE REVIEW
+Independent review checked native integration and shader/test interfaces.
+Fixed a pre-existing extra-family slider-routing issue so lambda and the new
+R slider update the model before requesting a render. Windows UI execution
+is still pending. Direct-field labels no longer imply orbit iteration.

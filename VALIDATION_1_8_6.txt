@@ -1,0 +1,39 @@
+FRAKTALFAKTUR v1.8.6 - QQRH Hilbert development
+Date: 2026-10-26
+
+SOURCE
+The materialized v1.8.5 archive matched the existing local archive byte-for-byte.
+The actual developed native C++/D3D11 source was extended in place in a new
+version directory. Theta coefficient data and the earlier driver equations
+are retained. Catalogue has 32 entries, including all preceding 29.
+
+VERIFIED HERE - PORTABLE C++17 ON LINUX
+EXTRA_INTEGRATION_TEST=PASS CHECKS=262
+QQRH_HILBERT_TEST=PASS CHECKS=402 FAILURES=0 N=12
+Total: 664 explicit mathematical/integration checks.
+CLASSIC_INTEGRATION=PASS: all 18 original candidate cases.
+14 family-25 serial/four-worker image hashes agree.
+The preceding 11 family-25 hashes exactly match the v1.8.5 receipt.
+14 default saved-view round trips and all 24 Hilbert preset round trips pass.
+Kernel tests compare independent direct sums and derivatives.
+Metric tests compare the positive pair formula with the Gram determinant,
+check the origin limit, radial symmetry, chart boundary, and extreme coordinates.
+Projective-angle tests check bounds and the overlap relation.
+Actual CPU previews were generated and visually inspected. Kernel Newton
+colouring was made continuous across the negative real axis.
+Standalone HLSL source equals the corresponding embedded shader source.
+Independent static review found no blocking issue after correcting preset labels.
+
+PREPARED NATIVE WINDOWS CHECKS - NOT EXECUTED HERE
+run.cmd builds the full Windows app with the user's existing MinGW compiler.
+--self-test runs the app's CPU suite.
+--gpu-self-test compiles the integrated shader and exercises the original GPU
+suite plus 72 raw Hilbert evaluator cases and 18 production field render cases.
+No CPU fallback may satisfy a GPU comparison. The GPU tests run on the user's
+hardware; their presence is not evidence that they have passed.
+
+OUTSTANDING
+Native Windows compilation, interactive GUI/inspector rendering, HLSL compiler
+acceptance, GPU dispatch and device performance remain unverified.
+CPU double and GPU float can disagree close to poles or fractal boundaries.
+No Lean compilation, axiom audit, full-Theta positivity or RH proof is claimed.

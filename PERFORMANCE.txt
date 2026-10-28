@@ -1,0 +1,106 @@
+HISTORICAL BASE PERFORMANCE: v1.7.2 (not for modes 14-18)
+NATIVE ENGINE REPORT - 1.7.2
+
+Run run_engine.cmd and send engine-report.txt. engine-samples.csv holds each
+sample. Native compilation/checks run only on your PC. No automatic tuning.
+
+THIRD SWEEP
+CPU32 baseline and reference/stable-curvature GPU comparisons at 320x180 and
+640x360. Core GPU targets are 8192 and 32768 pixels; extra 2048/65536 targets
+at the smaller size. Optional 1280x720 compares CPU32 and both GPU evaluators
+at32768. Each row has an untimed warmup and three timed repetitions.
+One large cached recolour and one cancellation case supplement the matrix.
+Shader startup is outside the 120-second cooperative work budget.
+
+A startup overlap measurement uses the same background shader compiler as the
+GUI. CPU frames run while GPU device/shader preparation proceeds on another
+CPU thread. The benchmark then reuses that prepared GPU renderer. This
+measures host compilation/CPU-work overlap; it does not claim GPU execution
+of shaders which are not compiled yet. Closing joins an in-flight compile.
+
+GUI RESPONSIBILITIES
+The UI thread handles input, state and painting. A persistent CPU worker pool
+renders while another CPU thread compiles the HLSL programs. CPU workers are
+temporarily limited to at most eight (or half their configured budget) during
+compilation, then return to their configured limit. One render worker owns
+all GPU immediate-context calls after successful atomic publication. Device
+resource creation during preparation uses no immediate context.
+
+Automatic curvature rendering, including both favourites, uses CPU32 based
+on measured results. Other candidates may use GPU after preparation. Explicit
+backend/worker overrides remain available. Shader failure retains CPU output.
+GPU kernels, readback and precision repairs still occur sequentially within a
+normal GPU frame. The GUI does not pipeline repair stripes with later GPU
+stripes. Conditional split experiments are described below.
+
+TIMINGS
+MS_PER_FRAME: median completed per-sample frame time. CPU samples repeat
+complete identical frames for >=100ms, dividing batch wall time by frame
+count. GPU samples each contain one frame. This compares warmed average CPU
+throughput with warmed GPU latency; it is not an input-latency measurement.
+FRAMES / WINDOW_MS: total completed frames and measured sample-window duration.
+CPU_MS_PER_FRAME: process kernel+user time divided by complete frames.
+CORES: approximate process CPU-time/wall-time ratio only when measured window
+>=100ms and CPU delta>=15.625ms; otherwise COARSE/NA. Short per-thread bursts
+can remain poorly resolved even when an aggregate counter is nonzero. These
+values are not a hardware utilization or energy meter.
+WAIT_MS: host query waits including yields, timers and polling overhead.
+READ_MS: staging copy/map and copying pixels to CPU memory.
+REPAIR_MS: marker scan, optional diagnostic mask capture, and CPU repairs.
+GPU_TIMELINE_MS: optional timestamp across dispatches and host batch gaps,
+valid only with TIMESTAMP_VALID. It is not active GPU execution duration.
+Stage times are medians. Timer counters labelled SUM cover all repetitions;
+MAX_WAIT_MS is the largest individual wait across repetitions. Other counts
+and batch sizes describe the first completed sample; CSV has every sample.
+
+BATCH / TIMER COUNTERS
+REQUESTED_BATCH is the explicit target; TARGET_BATCH includes workload cap.
+BATCH_PIXELS reports observed min/mean/max. Edge and tile quantization apply;
+a completed batch can exceed its target by one tile. Legacy schedule ignores
+explicit targets. Targets are not guaranteed GPU time deadlines.
+TIMER_TIMEOUTS records transient watchdog expiration, keeping/rearming the
+handle. TIMER_FAILURES records API errors; these close the handle and retry
+with bounded backoff. TIMER_RECREATIONS and LAST_ERROR/LAST_STATUS retain the
+recovery evidence. FALLBACKS/YIELDS identify waiting during API retry periods.
+No timer-resolution change is requested globally.
+REPAIRS / RAW_GPU_PIXELS identify actual CPU recomputations versus raw GPU
+outputs. All-CPU repair/fallback frames are excluded as GPU-throughput wins.
+
+STABLE CURVATURE
+The optional GPU mode evaluates equivalent finite-model polynomials H and J
+constructed in long double, scaled by u=y/4 and exact power-of-two row factors.
+It retains theta-root and denominator conditioning checks. A coefficient
+payload which cannot be represented normally in float32 is declined and
+repaired by CPU. Float-packed polynomial and original jet results need not
+be bitwise equal. Algebra identity and short GPU tests run before measuring;
+long chaotic image quality is assessed separately. No speedup is assumed.
+
+IMAGE DIFFERENCES
+Comparisons occur outside timing on captured same-state, same-size frames.
+FULL/REPAIRED/RAW sections report counts, max channel error, mean channel
+error, differing pixels and pixels above eight channel levels. Mask1 means
+CPU repair, mask0 means raw GPU. Capture cost is included equally for all GPU
+probe policies and disabled in ordinary rendering. Stable-versus-reference
+GPU comparisons supplement both evaluators' comparisons against CPU.
+CPU repairs and full CPU rendering currently use mathematically identical
+coordinate expressions with different rounding order. Chaotic orbits can
+amplify that difference. Full-image discrepancies cannot all be attributed
+to raw GPU math; the repaired/raw split is necessary.
+
+CONDITIONAL CPU/GPU SPLIT
+The probe runs one estimated balanced split only after a complete stable GPU
+result beats CPU speed and matches every full-frame CPU channel within eight
+levels, with stable repeat hashes. Otherwise it prints why splitting is
+skipped. A successful test never changes GUI policy automatically.
+The CPU renders a spatial strip concurrently with GPU rendering of the rest.
+Only the GPU calling thread touches its immediate context. CPU_WALL/GPU_WALL
+show branches; OVERLAP_MS is host-interval intersection, not proof of actual
+simultaneous device execution. There is no guaranteed core reservation or
+thread affinity. CPU/GPU repairs can still contend for physical resources.
+
+CANCELLATION / LIMITS
+Actual signal-to-return and separately drained queued GPU work are reported.
+Frames that finish before cancellation are labelled. Partial/timed-out frames
+are not throughput samples. Driver calls and compilation may exceed a
+cooperative deadline. CPU frequency, background load and scheduling affect
+measurements. No local compiler/native executable was run during preparation.

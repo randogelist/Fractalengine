@@ -1,0 +1,55 @@
+FRAKTALFAKTUR 1.8.6 - QQRH Hilbert development
+
+Finite source model, unchanged from 1.8.5:
+  b_n = 200^n a_n/a_0, from theta_coefficients.hpp
+  R in [0.1,1.25], r=200R, N=12
+  v_n = b_n R^n / sqrt(sum_(j=0..N) b_j^2 R^(2j))
+  w(z) = (v_n z^n)_(n=0..N).
+There are 13 components. The table contains floating-point values, with no
+rigorous full-function truncation enclosure.
+
+HOLomorphic OVERLAP KERNEL
+  H(z) = sum_(n=0..N) v_n^2 z^n = <w(z),v>.
+Here the Hermitian inner product is linear in its first argument.
+The full two-point Gram kernel is K(z,w)=H(z conjugate(w)).
+  K(z,z) = ||w(z)||^2 > 0 for every finite z.
+In particular H(1)=1. A zero of H(z) describes orthogonality to the reference
+state v. It is not a claim about a zero of Theta, xi, or zeta.
+
+PROJECTIVE DISTANCE
+  coherence(z) = |H(z)|^2 / K(z,z)
+  d_FS([w(z)],[v]) = acos(sqrt(coherence(z))).
+The distance is in radians, in [0,pi/2], with zero at z=1.
+This is the distance in ambient complex projective space, not the geodesic
+distance constrained to the image of the curve z -> [w(z)].
+
+PROJECTIVE METRIC
+With convention ds^2=g(z)|dz|^2 (no additional factor of 4),
+  g(z) = d_z d_conjugate(z) log K(z,z)
+       = (||w||^2 ||w'||^2 - |<w',w>|^2)/||w||^4.
+Writing a_n=v_n^2 and t=|z|^2 gives the nonnegative expression
+  g(z) = sum_(i<j) (j-i)^2 a_i a_j t^(i+j-1)
+         / (sum_n a_n t^n)^2.
+Consequently g(0)=a_1/a_0. Away from zero it is also Var_p(n)/|z|^2,
+where p_n=a_n |z|^(2n)/sum_j a_j |z|^(2j).
+The metric is radial: a metric-only field has rotational symmetry. It measures
+local distinguishability of neighboring coherent states, not a fractal orbit.
+The implemented pair sum avoids cancellation in the Gram determinant. Outside
+the unit circle it uses reversed coefficients and normalized weights; extreme
+coordinates may underflow the very small metric to zero.
+
+NEW DYNAMICAL CONSTRUCTIONS
+Kernel Newton iterates z_next=z-H(z)/H'(z), from a pixel seed z.
+Kernel feedback iterates z_next=z^2+c-0.35 H(z)/H'(z).
+These newly defined finite rational maps use the Hilbert overlap polynomial.
+The feedback parameter portrait uses z_0=0; a Julia portrait varies the seed
+for a fixed c. Small H' is treated as a numerical pole. Any display bailout
+is a rendering cutoff, not a certified escape radius. Newton convergence
+requires a small correction as well as a small residual. Colours encode
+numeric orbit information, not formally certified distinct roots.
+
+SCOPE
+The old overlap, Hardy-shift and angular-kernel views are retained. These
+finite Hilbert identities and numerical dynamics do not supply the missing
+full-Theta tail bounds, prove positivity of the research shell kernel, or
+establish RH. No Lean compilation or theorem certification is performed.

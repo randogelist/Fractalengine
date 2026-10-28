@@ -1,0 +1,82 @@
+HISTORICAL BASE FINDINGS: v1.7.2
+FIRST TARGET-MACHINE ENGINE REPORT: 1.6.0
+
+CPU: AMD Ryzen 9 9950X3D, 16 physical / 32 logical processors.
+GPU: AMD Radeon RX 9070 XT. Hardware D3D11 active.
+Build, CPU self-test and GPU self-test: PASS on target machine.
+38 completed rows, no cancelled samples scored.
+
+Median wall time at 160x90, 64 iterations, three repetitions:
+                                      Cayley currents   Tricorn weave
+CPU 1 worker                             27.007ms          50.998ms
+CPU 16 workers                            2.094ms           3.789ms
+CPU 32 workers                            1.450ms           2.950ms
+GPU legacy batching, old wait             46.164ms          46.818ms
+GPU adaptive minimum32, old wait        3023.909ms        3351.062ms
+GPU adaptive minimum2048, old wait        61.573ms          61.835ms
+
+The minimum32 runs used 201/209 completion batches and 193/205 sleeps;
+3020.346/3347.690ms were spent in completion waits. This confirms that host
+wake delay caused the adaptive policy to collapse into tiny batches.
+Even 10x6 previews spent roughly 15ms waiting for one GPU completion.
+
+CPU repairs: 11338/14400 (78.74%) for Cayley currents and 7380/14400 (51.25%)
+for Tricorn weave. Mixed precision had exactly 28800/57600 repairs.
+Its repair stage scaled from 15.451ms at one worker to 1.576ms at 16 workers,
+and 1.464ms at 32. Waiting still dominated overall GPU frame time.
+
+Split trials had CPU work lasting 0.8-3.7ms but total frames lasting
+45.8-77.9ms, dominated by the GPU branch and single-worker repairs.
+These results do not justify enabling that split in the GUI.
+
+CPU hashes agree across workers. GPU hashes are deterministic but differ from
+CPU hashes on these long chaotic views. Even one channel level can change a
+hash. The short numerical fixtures do not establish full-view image agreement;
+the next run reports explicit image-channel differences outside timing.
+
+Process CPU time advances in coarse ticks. Zero CPU time for a 2ms frame
+cannot establish zero CPU usage.
+
+NEXT QUESTIONS
+1. How much latency remains after fixing completion waits?
+2. At what viewport size does each backend become worthwhile?
+3. Can larger spatial splits beat CPU-only rendering?
+4. How much full-view image difference remains after guarded GPU repair?
+
+Existing precision guards have not been weakened. More stable algebra for
+the curvature denominator is a separate future change.
+
+SECOND TARGET-MACHINE REPORT: 1.6.1
+Build, CPU self-test and GPU self-test passed. 52 rows completed.
+High-resolution waiting worked until one timer failure late in the run.
+
+160x90, Cayley / Tricorn median milliseconds:
+Old wait, legacy batches:       46.129 / 46.575
+Responsive bounded2048:          4.142 /  8.871
+CPU32:                          1.567 /  3.068
+
+640x360:
+CPU32:                         22.098 / 42.126
+Best tested GPU policy:        57.708 /110.094
+Best tested spatial split:     37.172 / 54.181
+
+1280x720:
+CPU32:                         86.942 /172.310
+Best tested GPU policy:       202.290 /371.567
+
+The 1280 GPU rows ran after the timer fallback latch activated. They still
+show CPU32 winning in this implementation; they do not establish a clean
+high-resolution-timer crossover. The third run repairs that confounder.
+
+At 1280, repairs remained 726665/921600 (Cayley) and 471404/921600 (Tricorn).
+CPU-vs-GPU pixels above eight channel levels: 6248 and 28899 respectively.
+Maximum channel differences: 153 and 201. Repair masks are needed to separate
+raw float32 differences from repaired-coordinate rounding effects.
+
+The timer failure occurred during the 640 Cayley CPU75 split. All later rows
+used yielding fallback; the last GPU row recorded about 1.76 million yields.
+The failure was treated as permanent by the implementation;
+the report cannot distinguish timeout from API error without status/error. 1.6.2 now records
+these independently and keeps/rearms a timed-out handle.
+
+The new stable-curvature and large-queue experiments have no measurements yet.

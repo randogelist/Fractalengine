@@ -1,0 +1,70 @@
+NEW SPECTRAL STRUCTURE FAMILY - FRAKTALFAKTUR RH LAB GPU v1.8.0
+
+COMMON NOTATION
+  T(y) = sum_{k=0}^N a_k y^k,  N in {8,16,32}
+  a_k = 200^k [z^k]Theta(z)/Theta(0) (stored, rounded binary64)
+  y = b*z + h, b>0, R>0, lambda is a complex feedback amplitude.
+  For each target F(y), Newton correction F(y)/(b*F'(y)).
+  Classic host: z_next=z^2+c-lambda*F(y)/(b*F'(y)).
+  In nonclassic feedback banks, the same correction is passed through
+  the original native Tricorn/Cayley/memory/twist carrier algebra.
+
+14 / spectral_echo  -  FINITE-DISTANCE DETERMINANT
+  E_R(y) = det [[T(y+R),T(y)],[T(y),T(y-R)]]
+         = T(y+R)*T(y-R)-T(y)^2.
+  E_R'(y) = T'(y+R)*T(y-R) + T(y+R)*T'(y-R)-2*T(y)*T'(y).
+  The finite displacement R, unlike a Taylor derivative, probes two
+  spectrally separated locations. It is NOT asserted positive or PSD.
+
+15 / laguerre_gram  -  INFINITESIMAL DETERMINANT
+  L(y)=T(y)*T''(y)-T'(y)^2 = T(y)^2*(log T(y))''
+  (the log expression holds only away from zeros).
+  L'(y)=T(y)*T'''(y)-T'(y)*T''(y).
+  E_R(y)=R^2*L(y)+O(R^4), valid for fixed y and R->0.
+  The factor R^2 cancels in its Newton quotient away from degeneracies.
+  The mode itself uses L, not E_R/R^2, so no small-R conditioning.
+
+16 / dyadic_holonomy  -  NONLOCAL SCALE DETECTOR
+  H(y)=T(2y)*T(y/2)-T(y)^2.
+  H'(y)=2*T'(2y)*T(y/2) + (1/2)*T(2y)*T'(y/2)
+       -2*T(y)*T'(y).
+  Wherever T is nonzero: H/T(y)^2 measures the failure of the
+  three-point log-scale identity log T(2y)+log T(y/2)=2 log T(y)
+  modulo logarithm branches. The polynomial form remains regular at
+  T(y)=0, unlike this quotient/log interpretation.
+
+17 / antipodal_wronskian  -  REFLECTED CURRENT
+  W(y)=T'(y)*T(-y)-T(y)*T'(-y).
+  W'(y)=T''(y)*T(-y)-2*T'(y)*T'(-y)+T(y)*T''(-y).
+  W(-y)=-W(y), W'(-y)=W'(y).  Hence y=0 is always a root
+  (not necessarily a simple one); for real a_k, conjugation symmetry
+  also holds. These are literal identities of the finite polynomial.
+
+18 / projective_schwarzian  -  PROJECTIVE CURVATURE
+  Q(y)=2*T'(y)*T'''(y)-3*T''(y)^2.
+  Q'(y)=2*T'(y)*T''''(y)-4*T''(y)*T'''(y).
+  S(T)=T'''/T'-3/2*(T''/T')^2 = Q/(2*T'^2) wherever T'!=0.
+  The Schwarzian S(T) is invariant under output Möbius transforms
+  M(T)=(aT+b)/(cT+d), ad-bc != 0, wherever defined.
+  We iterate the zero set of the polynomial numerator Q, not S itself.
+  The Newton iteration is NOT claimed invariant under Möbius transforms.
+
+CALCULATION / STABILITY
+  Each of T^(0)...T^(4) is computed from the same polynomial by
+  differentiated Horner recurrence; for a product channel, use
+  M=max(1,|shifted arguments|), shared by every factor.
+  The common factor M^(2N) cancels in F/F' numerically, avoiding high
+  monomial overflow and mismatched normalization of shifted factors.
+  HLSL float32 evaluates the same finite polynomials in guarded form,
+  marking cancellation/near-pole pixels for host CPU repair.
+  No epsilon denominator, clipping or hidden levels are introduced.
+
+USER EXPLORATION
+  Start at #14, vary R from 0.05 to 3 to morph the spectral echo.
+  Compare 14 at small R against 15 at the same host, degree, c, lambda.
+  Explore 16 with the reciprocal chart and both Cayley/Tricorn carriers.
+  Explore 17 around the reflected real axis and with the currents bank.
+  Explore 18 at deep zoom near x~-1 / x~-2, where the finite model's
+  Taylor truncation acquires richer spectral-root geometry.
+  The target labels are descriptions of explicit new maps, not claims
+  that their orbit sets enjoy proved dynamical properties.

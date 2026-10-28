@@ -1,0 +1,27 @@
+NEW FRACTAL GENERATION — INTEGRATED DRIVER INDEXES 19–26
+=========================================================
+
+Let z and c be complex and lambda be a real adjustable parameter.
+All maps are independent candidates and are not the analytic xi function.
+
+19 / extra_18: M=[A,B]=A B A^{-1} B^{-1} (projective Mobius),
+    z_(n+1) = M_lambda(z_n)^2 + c.
+20 / extra_19: K_a(z)=(z-a)/(1-conj(a)z), a=(.28+.22i)(1+.17lambda),
+    z_(n+1)=K_a(conj(z_n))^2+c+.14lambda K_a(conj(z_n)).
+21 / extra_20: z_(n+1)=z_n^2+c+(lambda+.22i lambda)(z_n-z_(n-1)).
+    The state includes (z_n,z_(n-1)): 4 real dimensions.
+22 / extra_21: r_j=-(gamma_j/gamma_1)^2 for the first five
+    critical-line zero heights gamma_j; P(z)=prod_j(z-r_j).
+    z_(n+1)=z_n-P(z_n)/P'(z_n) = z_n-1/sum_j 1/(z_n-r_j).
+23 / extra_22: P(z)=z^5-1+.30lambda z^2;
+    z_(n+1)=z_n-2P P'/(2(P')^2-P P'').
+24 / extra_23: F_lambda(z)=z/2+(z+1/2)sin(pi z/2)^2
+    +lambda sin(pi z)/8. At every integer n the sine deformation
+    vanishes and F_lambda(n)= n/2 if even, (3n+1)/2 if odd.
+25 / extra_24: eta_9(z)=sum_(n=1)^9 (-1)^(n-1)n^(-z),
+    z_(n+1)=z_n-eta_9(z_n)/eta_9'(z_n).
+26 / extra_25: S(z^3-3z)=(-4z^2-2)/(z^2-1)^2,
+    z_(n+1)=z_n^2+c+lambda S(z_n^3-3z_n).
+
+Convergence/escape is a visual finite-orbit classification, not a
+mathematically certified basin or proof. HLSL uses float32; CPU uses double.

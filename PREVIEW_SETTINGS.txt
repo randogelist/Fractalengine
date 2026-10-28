@@ -1,0 +1,20 @@
+PREVIEW_ATLAS.png - directly computed portable C++ visual sample, not D3D11.
+
+Five side-by-side Julia-plane CPU renders:
+Left to right: #14 spectral echo, #15 Laguerre determinant,
+#16 dyadic holonomy, #17 antipodal current, #18 Schwarzian numerator.
+
+Common parameters:
+  degree N = 16, R = 0.6, b = 0.9, h = 0.28
+  complex lambda = 0.65 + 0.02i
+  Julia-plane complex c = -0.38 + 0.11i
+  Cayley feedback map index=5, gain=1.0, relaxation=0.75
+  coloring mode = endpoint phase (1), palette=0, hue=.14, bands=1
+  iteration budget = 64
+  camera x in [-1.68, -0.43], y in [0.05, 1.25]
+  230x180 pixels each before margins / captions.
+
+Images show finite iteration cutoff patterns, not verified dynamic
+invariants, exact escape status, or mathematics beyond the finite model.
+They were computed using the same rhmaster::Model / rhfresh::Model C++
+source code included in this release (no external fractal library).

@@ -1,0 +1,72 @@
+FRAKTALFAKTUR 1.8.5 - QQRH Hilbert geometry
+
+SOURCE AND SCOPE
+Extended the actual FRAKTALFAKTUR_RH_LAB_GPU_v1_8_4 source archive.
+The original 26 catalogue entries remain; entries 27-29 are new.
+Uses the existing theta_coefficients.hpp table unchanged, not sampled zeros.
+The table is floating-point input, not a rigorously enclosed coefficient set.
+
+Recovered research construction (October 15, 2026, Hardy/shift merge):
+  Theta(z) = xi(1/2 + sqrt(z)) = sum a_n z^n
+  v_r = (a_n r^n), B(v_0,v_1,...) = (v_1,v_2,...)
+  c_k(r) = <B^k v_r,v_r>
+  Psi(r,x) = (1/r) sum_(k>=1) k c_k(r) U_(k-1)(x)
+The correlation identity is the basis for the finite numerical views below.
+No Lean or proof compilation was performed for this visualization package.
+
+FINITE MODEL
+N=12 means indices 0..12: 13 components. The table stores b_n=200^n a_n/a_0.
+Scaled radius R is adjustable in [0.1,1.25]; physical radius r=200R.
+Set t_n=b_n R^n and v=t/||t||_2. Let c_k=sum_(n=0..N-k) v_n v_(n+k).
+The Hilbert space is C^13 with its usual Hermitian inner product, equivalently
+the degree<=12 polynomial subspace of Hardy H^2(D), with zero-padded shift.
+The coefficients are real here. c_0=1 and c_k=<B^k v,v>.
+For w(z)=(v_n z^n), K(z,w)=sum v_n^2 z^n conjugate(w)^n is a finite Gram kernel.
+For shifted vectors, G(p,q)=<B^p v,B^q v> has
+  G(p,q)-G(p+1,q+1)=v_p v_q.
+The shift energy loss is ||B^p v||^2-||B^(p+1) v||^2=v_p^2.
+
+27 / QQRH HILBERT OVERLAP (extra_26)
+Direct geometry, no orbit iteration:
+  coherence(z)=|<v,w(z)>|^2/(||v||^2 ||w(z)||^2)
+              =|sum v_n^2 z^n|^2/(sum v_n^2 |z|^(2n)).
+This squared normalized overlap lies in [0,1] and equals 1 at z=1.
+Axes: Re(z), Im(z). Palette 0: blue for small overlap, gold for large overlap.
+Bands indicate equal values. Right-click reads the value at the selected point.
+
+28 / QQRH HARDY SHIFT FRACTAL (extra_27)
+  A(z)=sum_(k=1..12) (c_k/c_1) z^k
+  z_next=z^2+c-0.35 A(z)/A'(z).
+A(0)=0 and A'(0)=1. This is a newly defined fractal map using the actual
+finite backward-shift correlations. The c portrait uses seed z_0=0;
+the Julia view starts at each pixel with the selected c.
+
+29 / QQRH ANGULAR KERNEL NEWTON (extra_28)
+Let Q(z)=sum v_n z^n and x=cos(theta). Then
+  |Q(exp(i theta))|^2=c_0+2 sum_(k=1..12) c_k T_k(x),
+  d_x |Q(exp(i theta))|^2=2 sum k c_k U_(k-1)(x).
+Set S=sum k^2 c_k and F(x)=sum k c_k U_(k-1)(x)/S; F(1)=1.
+The continued polynomial F on the complex x-plane gives the new iteration
+  z_next=z-F(z)/F'(z).
+This picture shows finite Newton dynamics. Colours use final phase sectors
+and iteration count, not certified distinct-root labels.
+
+INTERPRETATION LIMITS
+Only the finite-polynomial identities are implemented. The truncation has no
+rigorous tail enclosure. Full-function positivity is not inferred from pixels.
+The positive Gram kernel above is distinct from the research shell kernel
+  [z Theta'(z) conjugate(Theta(w))
+   -Theta(z) conjugate(w Theta'(w))]/(z-conjugate(w)).
+Its proposed Gram factorization remains an open premise in the retrieved
+construction. These plots do not establish it or RH.
+Dark orbit pixels mean nonescape/nonconvergence within the finite budget.
+A bailout is a display cutoff, not a certified escape radius.
+
+ENGINE
+The original native C++/D3D11 renderer, worker scheduling, progressive zoom,
+catalogue, view saving and BMP export are retained. CPU uses double precision;
+GPU uses float, so detailed fractal boundaries can differ.
+CPU caches the radius-dependent coefficients per worker thread. GPU builds
+its 13-component model once per pixel, outside the iteration loop.
+run.cmd builds using the existing Windows MinGW compiler and runs CPU checks
+and native D3D11 checks before launching. No Python/PowerShell/WSL is needed.

@@ -1,0 +1,13 @@
+/build/
+/output/
+/renders/
+/validation/tmp/
+*.exe
+*.o
+*.obj
+*.pdb
+*.ok
+*.tmp
+*.sig
+/build.log
+__pycache__/

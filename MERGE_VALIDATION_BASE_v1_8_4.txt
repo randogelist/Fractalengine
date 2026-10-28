@@ -1,0 +1,26 @@
+MERGE VALIDATION RECEIPT / FRAKTALFAKTUR v1.8.4
+================================================
+Actual v1.8.0 source recovered from user upload on 2026-10-26.
+Original src/amp_native.cpp and 18-driver mathematical registry retained.
+Source merge consists of catalogue::Entry family 25 generation 1..8,
+source CPU evaluator, runtime-compiled Direct3D11 compute shader and UI.
+Additional HLSL source retained in src/frk_extra_math.hlsl.
+
+LOCAL Linux g++17 -O2 -pthread:
+  SELF_TEST=PASS CHECKS=156 DRIVERS=8
+  EXTRA_INTEGRATION_TEST=PASS CHECKS=189
+  CATALOGUE_COUNT=26 (original 18 plus 8)
+  VIEW_ROUNDTRIP=PASS (all eight family-25 models)
+  CPU_PARITY=PASS (1-worker and 4-worker deterministic hashes)
+  ORIGINAL_FORMULAS: preserved source except routing and family-25 branch.
+
+NOT YET CERTIFIED:
+  Native Windows x86_64 MinGW full package compilation
+  Runtime HLSL cs_5_0 compile and Device11 dispatch of new shader
+  On-device CPU/GPU pixel agreement and live interactive performance
+  Existing original v1.8.0 self-test on the new full native build
+
+Earlier Windows user checks for extension v1.8.3 passed 156 C++ math
+checks and 3096-byte ps_5_0 shader compilation independently. These
+checks are not a substitute for testing the integrated v1.8.4 shader.
+Build.cmd runs original tests + merge self-tests + GPU tests on Windows.

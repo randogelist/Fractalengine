@@ -1,0 +1,35 @@
+FRAKTALFAKTUR RH LAB GPU 1.8.0 - TEST/VERIFY STATUS
+
+VERIFIED IN CURRENT PORTABLE BUILD ENVIRONMENT (NOT Windows)
+- 819 independent algebraic checks for 5 new targets, degrees 8/16/32,
+  multiple complex points and finite-shift radii: PASS, 0 failures.
+- Includes independent direct-power oracle of every F/F' vs scaled-Horner
+  implementation and central finite-difference complex-analytic derivative.
+- Includes conjugate symmetry, odd/even antipodal parity,
+  E_R/R^2 -> L as R->0, and post-Möbius Schwarzian invariance checks.
+- 18 catalogue candidate invariants / legacy self-test: PASS (portable C++).
+- Five portable C++ Julia frame renders (41,400 pixels each) were produced
+  and visually inspected at the user-facing iteration map level. These are
+  demonstration plots, not GPU correctness evidence.
+
+NOT VERIFIED LOCALLY
+- Native Windows g++ build of the complete Win32/D3D11 application.
+- Direct3D 11 HLSL shader compilation and GPU driver availability.
+- Shader vs host parity, raw GPU coverage, fallback-repair correctness
+  and recolour-cache hit measurements on the target PC.
+
+NATIVE STARTUP CHECKS (from unchanged build.cmd test pipeline + additions)
+  run.cmd -> build.cmd -> MSYS2 UCRT64 GCC C++17 (when installed)
+                      -> --self-test
+                      -> --gpu-self-test (if available)
+                      -> launch catalogue (on PASS or GPU unavailable)
+
+  NEW_STRUCTURE_TEST_CASES=819 FAILURES=0  [portable verification]
+  SELF_TEST=PASS                             [portable math+catalogue]
+  NEW_STRUCTURE_GPU_TEST=PASS/FAIL            [pending native GPU]
+  BUILD=PASS VERSION=1.8.0                   [pending native Windows]
+
+A GPU implementation was coded and its kernel scope/audit inspected, but
+no PASS verdict is asserted before it compiles and executes on Windows.
+The previous docs FINDINGS.txt and PERFORMANCE.txt are historical
+measurements from v1.7.2 and do not measure new-driver speed.
